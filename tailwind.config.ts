@@ -11,7 +11,13 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        backgroundSecondary: "#ededed",
+        prime: "#192d75",
       },
+    },
+    screens: {
+      tablet: "720px",
+      desktop: "1030px",
     },
   },
   plugins: [],
