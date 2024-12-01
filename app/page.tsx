@@ -1,4 +1,4 @@
-import Image from "next/legacy/image";
+import Image from "next/image";
 import logo from "/static/img/TeachHive logo transparent.png";
 
 export default function Home() {

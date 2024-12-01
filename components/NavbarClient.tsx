@@ -5,7 +5,7 @@ import "../static/styles/Header.css";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import logo from "../static/img/Nav logo.png";
-import Image from "next/legacy/image";
+import Image from "next/image";
 import { FaUserCircle } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
