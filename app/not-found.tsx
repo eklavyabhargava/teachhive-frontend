@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "next/legacy/image";
 import NotFound404 from "../static/img/404 bg-none.png";
 
 const NotFound = () => {
