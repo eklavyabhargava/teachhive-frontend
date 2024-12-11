@@ -4,12 +4,14 @@ interface userState {
   user: { name: string; emailId: string } | null;
   isUserLoggedIn: boolean;
   isLoading: boolean;
+  showAuthModal: boolean;
 }
 
 const initialState: userState = {
   user: null, // Default user state
-  isUserLoggedIn: true,
+  isUserLoggedIn: false,
   isLoading: false,
+  showAuthModal: false,
 };
 
 const userSlice = createSlice({
@@ -27,9 +29,13 @@ const userSlice = createSlice({
     setLoading: (state, action) => {
       state.isLoading = action.payload;
     },
+    setAuthModal: (state, action) => {
+      state.showAuthModal = action.payload;
+    },
   },
 });
 
-export const { setUser, clearUser, setLoading } = userSlice.actions;
+export const { setUser, clearUser, setLoading, setAuthModal } =
+  userSlice.actions;
 
 export default userSlice.reducer;

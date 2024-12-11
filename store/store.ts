@@ -1,40 +1,19 @@
 "use client";
 
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import {
-  persistReducer,
-  FLUSH,
-  REHYDRATE,
-  PAUSE,
-  PERSIST,
-  PURGE,
-  REGISTER,
-} from "redux-persist";
-import storage from "redux-persist/lib/storage"; // Default is localStorage for web
 import userReducer from "./slices/userSlice";
 
+// Combine all reducers
 const rootReducer = combineReducers({
   user: userReducer,
 });
 
-const persistConfig = {
-  key: "root",
-  version: 1,
-  storage,
-};
-
-const persistedReducer = persistReducer(persistConfig, rootReducer);
-
+// Configure the store with the combined reducers
 const store = configureStore({
-  reducer: persistedReducer,
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-      },
-    }),
+  reducer: rootReducer,
 });
 
+// Export RootState and AppDispatch types for type-safe usage
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 

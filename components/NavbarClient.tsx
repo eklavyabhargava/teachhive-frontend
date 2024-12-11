@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "../static/styles/Header.css";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -9,25 +9,93 @@ import Image from "next/image";
 import { FaUserCircle } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { setUser } from "@/store/slices/userSlice";
 import { IoIosArrowDown } from "react-icons/io";
+import { setAuthModal } from "@/store/slices/userSlice";
+
+interface Navlink {
+  title: string | React.JSX.Element;
+  path: string;
+  hideFor?: "desktop" | "mobile" | undefined;
+}
 
 const NavBar = () => {
   const pathname = usePathname();
-  const [isOpen, setIsOpen] = useState(false);
-  const [openDrowdown, setDropdown] = useState(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [openDropdown, setDropdown] = useState<boolean>(false);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const dispatch = useDispatch();
 
   const { user, isUserLoggedIn } = useSelector(
     (state: RootState) => state.user
   );
-  const dispatch = useDispatch();
-  dispatch(setUser({ user: null, isUserLoggedIn: true }));
-  console.log(isUserLoggedIn);
 
   // Function to toggle the menu
   const handleToggleMenu = () => {
     setIsOpen(!isOpen);
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setDropdown(false);
+      }
+    };
+
+    if (openDropdown) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [openDropdown]);
+
+  const Navlinks: Navlink[] = [
+    {
+      title: "Home",
+      path: "/",
+    },
+    {
+      title: "Courses",
+      path: "/courses",
+    },
+    {
+      title: "Tutors",
+      path: "/tutors",
+    },
+    {
+      title: "Schools & Coaching Centers",
+      path: "/schools",
+    },
+    {
+      title: "About Us",
+      path: "/about",
+    },
+    {
+      title: "Contact Us",
+      path: "/contact",
+    },
+    {
+      title: (
+        <button
+          onClick={() => dispatch(setAuthModal(true))}
+          className="navlink"
+        >
+          <div className="flex flex-row items-center gap-x-1 text-lg">
+            <span className="text-xl">
+              <FaUserCircle />
+            </span>
+            Login
+          </div>
+        </button>
+      ),
+      path: "#",
+      hideFor: "mobile",
+    },
+  ];
 
   return (
     <div className="navbar px-3">
@@ -43,11 +111,9 @@ const NavBar = () => {
       </div>
       <div></div>
       <div className="desktop:hidden flex gap-x-6 items-center">
-        <Link
-          href="/auth/login"
-          className={
-            pathname === "/auth/login" ? "text-prime navlink" : "navlink"
-          }
+        <button
+          onClick={() => dispatch(setAuthModal(true))}
+          className="navlink z-[999]"
         >
           <div className="flex flex-row items-center gap-x-1 text-lg">
             <span className="text-xl">
@@ -55,7 +121,7 @@ const NavBar = () => {
             </span>
             Login
           </div>
-        </Link>
+        </button>
         <div
           className={`hamburger ${isOpen ? "open" : ""} flex desktop:hidden`}
           onClick={() => handleToggleMenu()}
@@ -80,8 +146,11 @@ const NavBar = () => {
                   <IoIosArrowDown />
                 </span>
               </div>
-              {openDrowdown && (
-                <div className="dropdown-content absolute flex flex-col rounded-sm no-underline ">
+              {openDropdown && (
+                <div
+                  ref={dropdownRef}
+                  className="dropdown-content absolute flex flex-col rounded-sm no-underline "
+                >
                   <Link href={"/"}>Profile</Link>
                   <Link href={"/"}>Logout</Link>
                 </div>
@@ -123,42 +192,5 @@ const NavBar = () => {
     </div>
   );
 };
-
-const Navlinks = [
-  {
-    title: "Home",
-    path: "/",
-  },
-  {
-    title: "Courses",
-    path: "/courses",
-  },
-  {
-    title: "Tutors",
-    path: "/tutors",
-  },
-  {
-    title: "Schools & Coaching Centers",
-    path: "/schools",
-  },
-  {
-    title: "About Us",
-    path: "/about",
-  },
-  {
-    title: "Contact Us",
-    path: "/contact",
-  },
-  {
-    title: (
-      <div className="flex flex-row items-center gap-x-1">
-        <FaUserCircle />
-        Login
-      </div>
-    ),
-    path: "/auth/login",
-    hideFor: "mobile",
-  },
-];
 
 export default NavBar;

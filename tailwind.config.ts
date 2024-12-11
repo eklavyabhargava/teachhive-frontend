@@ -11,12 +11,16 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
-        backgroundSecondary: "#ededed",
+        bgSecondary: "#c7c7c7",
         prime: "#192d75",
+        secondaryColor: "#639983",
+        "prime-hover": "#233d9f",
+        "secondary-hover": "#69a88d",
       },
     },
     screens: {
-      tablet: "720px",
+      mobile: "640px",
+      tablet: "820px",
       desktop: "1030px",
     },
   },
